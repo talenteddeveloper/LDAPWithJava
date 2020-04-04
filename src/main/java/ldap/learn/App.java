@@ -6,11 +6,7 @@ import javax.naming.AuthenticationException;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
+import javax.naming.directory.*;
 
 public class App {
 
@@ -52,10 +48,29 @@ public class App {
 
 	}
 
+	public void addUser() {
+		Attributes attributes = new BasicAttributes();
+		Attribute attribute = new BasicAttribute("objectClass");
+		attribute.add("inetOrgPerson");
+
+		attributes.put(attribute);
+		// user details
+		attributes.put("sn", "Ricky");
+		try {
+			connection.createSubcontext("cn=Tommy,ou=users,ou=system", attributes);
+			System.out.println("success");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	public static void main(String[] args) throws NamingException {
 
 		App app = new App();
 		app.newConnection();
+		app.addUser();
 		app.getAllUsers();
 
 	}
