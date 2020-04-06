@@ -82,12 +82,24 @@ public class App {
 		}
 		
 	}
+	public void deleteUser()
+	{
+		try {
+			connection.destroySubcontext("cn=Tommy,ou=users,ou=system");
+			System.out.println("success");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String[] args) throws NamingException {
 
 		App app = new App();
 		app.newConnection();
 		//app.addUser();
-		app.getAllUsers();
+		//app.getAllUsers();
+		app.deleteUser();
 
 	}
 }
