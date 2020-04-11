@@ -43,7 +43,7 @@ public class App {
 			result = (SearchResult) users.next();
 			Attributes attr = result.getAttributes();
 			String name = attr.get("cn").get(0).toString();
-			addUserToGroup(name,"Administrators");
+			deleteUserFromGroup(name,"Administrators");
 			System.out.println(attr.get("cn"));
 			System.out.println(attr.get("sn"));
 		}
@@ -92,14 +92,29 @@ public class App {
 			e.printStackTrace();
 		}
 	}
+	
+	public void deleteUserFromGroup(String username, String groupName)
+	{
+		ModificationItem[] mods = new ModificationItem[1];
+		Attribute attribute = new BasicAttribute("uniqueMember","cn="+username+",ou=users,ou=system");
+		mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, attribute);
+		try {
+			connection.modifyAttributes("cn="+groupName+",ou=groups,ou=system", mods);
+			System.out.println("success");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	public static void main(String[] args) throws NamingException {
 
 		App app = new App();
 		app.newConnection();
 		//app.addUser();
-		//app.getAllUsers();
-		app.deleteUser();
+		app.getAllUsers();
+		//app.deleteUser();
 
 	}
 }
