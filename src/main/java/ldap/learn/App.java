@@ -43,7 +43,7 @@ public class App {
 			result = (SearchResult) users.next();
 			Attributes attr = result.getAttributes();
 			String name = attr.get("cn").get(0).toString();
-			deleteUserFromGroup(name,"Administrators");
+			//deleteUserFromGroup(name,"Administrators");
 			System.out.println(attr.get("cn"));
 			System.out.println(attr.get("sn"));
 		}
@@ -108,13 +108,37 @@ public class App {
 		
 	}
 
+	public void searchUsers() throws NamingException {
+		//String searchFilter = "(uid=1)"; //  for one user
+		//String searchFilter = "(&(uid=1)(cn=Smith))"; // and condition 
+		String searchFilter = "(|(uid=1)(uid=2)(cn=Smith))"; // or condition
+		String[] reqAtt = { "cn", "sn","uid" };
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		controls.setReturningAttributes(reqAtt);
+
+		NamingEnumeration users = connection.search("ou=users,ou=system", searchFilter, controls);
+
+		SearchResult result = null;
+		while (users.hasMore()) {
+			result = (SearchResult) users.next();
+			Attributes attr = result.getAttributes();
+			String name = attr.get("cn").get(0).toString();
+			//deleteUserFromGroup(name,"Administrators");
+			System.out.println(attr.get("cn"));
+			System.out.println(attr.get("sn"));
+			System.out.println(attr.get("uid"));
+		}
+
+	}
 	public static void main(String[] args) throws NamingException {
 
 		App app = new App();
 		app.newConnection();
 		//app.addUser();
-		app.getAllUsers();
+		//app.getAllUsers();
 		//app.deleteUser();
+		app.searchUsers();
 
 	}
 }
