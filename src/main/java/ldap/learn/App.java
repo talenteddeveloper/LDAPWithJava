@@ -12,6 +12,7 @@ public class App {
 
 	DirContext connection;
 
+	/* create connection during object creation */
 	public void newConnection() {
 		Properties env = new Properties();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -131,14 +132,37 @@ public class App {
 		}
 
 	}
+	
+	/* use this to authenticate any existing user */
+	public static boolean authUser(String username, String password)
+	{
+		try {
+			Properties env = new Properties();
+			env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+			env.put(Context.PROVIDER_URL, "ldap://localhost:10389");
+			env.put(Context.SECURITY_PRINCIPAL, "cn="+username+",ou=users,ou=system");  //check the DN correctly
+			env.put(Context.SECURITY_CREDENTIALS, password);
+			DirContext con = new InitialDirContext(env);
+			con.close();
+			return true;
+		}catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	
 	public static void main(String[] args) throws NamingException {
 
-		App app = new App();
-		app.newConnection();
-		//app.addUser();
-		//app.getAllUsers();
-		//app.deleteUser();
-		app.searchUsers();
-
+		// App app = new App();
+		// app.newConnection();
+		// app.addUser();
+		// app.getAllUsers();
+		// app.deleteUser();
+		// app.searchUsers();
+		 
+		System.out.println(authUser("test","1574"));
+		  
 	}
 }
