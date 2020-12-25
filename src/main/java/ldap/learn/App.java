@@ -143,26 +143,39 @@ public class App {
 			env.put(Context.SECURITY_PRINCIPAL, "cn="+username+",ou=users,ou=system");  //check the DN correctly
 			env.put(Context.SECURITY_CREDENTIALS, password);
 			DirContext con = new InitialDirContext(env);
+			System.out.println("success");
 			con.close();
 			return true;
 		}catch (Exception e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
+			System.out.println("failed: "+e.getMessage());
 			return false;
 		}
 	}
 	
+	/* use this to update user password */
+	public void updateUserPassword(String username, String password) {
+		try {
+			String dnBase=",ou=users,ou=system";
+			ModificationItem[] mods= new ModificationItem[1];
+			mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userPassword", password));// if you want, then you can delete the old password and after that you can replace with new password 
+			connection.modifyAttributes("cn="+username +dnBase, mods);//try to form DN dynamically
+			System.out.println("success");
+		}catch (Exception e) {
+			System.out.println("failed: "+e.getMessage());
+		}
+	}
 	
 	public static void main(String[] args) throws NamingException {
 
-		// App app = new App();
+		 App app = new App();
 		// app.newConnection();
 		// app.addUser();
 		// app.getAllUsers();
 		// app.deleteUser();
 		// app.searchUsers();
 		 
-		System.out.println(authUser("test","1574"));
+		//System.out.println(authUser("test","1574"));
+		 app.updateUserPassword("test", "123");
 		  
 	}
 }
