@@ -165,17 +165,31 @@ public class App {
 		}
 	}
 	
+	public void updateUserDetails(String username, String employeeNumber) {
+		try {
+			String dnBase=",ou=users,ou=system";
+			Attribute attribute = new BasicAttribute("employeeNumber", employeeNumber);
+			ModificationItem[] mods= new ModificationItem[1];
+			mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, attribute);
+			connection.modifyAttributes("cn="+username +dnBase, mods);//try to form DN dynamically
+			System.out.println("success");
+		}catch (Exception e) {
+			System.out.println("failed: "+e.getMessage());
+		}
+	}
+	
 	public static void main(String[] args) throws NamingException {
 
-		 App app = new App();
-		// app.newConnection();
+		App app = new App();
+		app.newConnection();
 		// app.addUser();
 		// app.getAllUsers();
 		// app.deleteUser();
 		// app.searchUsers();
-		 
-		//System.out.println(authUser("test","1574"));
-		 app.updateUserPassword("test", "123");
+
+		// System.out.println(authUser("test","1574"));
+		// app.updateUserPassword("test", "123");
+		app.updateUserDetails("Tommy", "123");
 		  
 	}
 }
